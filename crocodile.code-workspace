@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "crocodile_HEADSET",
+			"path": "crocodile_HEADSET"
+		},
+		{
+			"name": "crocodile_RECEIVER",
+			"path": "crocodile_RECEIVER"
+		},
+		{
+			"name": "crocodile_SOUND",
+			"path": "crocodile_SOUND"
+		}
+	],
+	"settings": {}
+}
