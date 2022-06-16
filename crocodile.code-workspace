@@ -1,15 +1,15 @@
 {
 	"folders": [
 		{
-			"name": "crocodile_HEADSET",
+			"name": "headset (ESP8266)",
 			"path": "crocodile_HEADSET"
 		},
 		{
-			"name": "crocodile_RECEIVER",
+			"name": "receiver (ESP32)",
 			"path": "crocodile_RECEIVER"
 		},
 		{
-			"name": "crocodile_SOUND",
+			"name": "sound (T4)",
 			"path": "crocodile_SOUND"
 		}
 	],
