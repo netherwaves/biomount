@@ -11,6 +11,9 @@
 		{
 			"name": "sound (T4)",
 			"path": "crocodile_SOUND"
+		},
+		{
+			"path": "utils"
 		}
 	],
 	"settings": {}
