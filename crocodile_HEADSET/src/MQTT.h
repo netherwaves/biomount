@@ -7,8 +7,6 @@
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-void floatToBytes(char bytes_temp[4], float float_var);
-
 void setup_wifi()
 {
     Serial.println();
