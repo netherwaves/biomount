@@ -32,13 +32,16 @@
 #include "Threshold.h"
 #include "Lop.h"
 
+#include <Adafruit_ADS1X15.h>
+
 #ifndef RESP_H_
 #define RESP_H_
 
 class Respiration {
 
   // Analog pin the Respiration sensor is connected to.
-  uint8_t _pin;
+  uint8_t _chan;
+  Adafruit_ADS1015* _ads;
 
   unsigned long bpmChronoStart;
 
@@ -76,7 +79,7 @@ class Respiration {
   unsigned long prevSampleMicros;
 
 public:
-  Respiration(uint8_t pin, unsigned long rate=50);   // default respiration samplerate is 50Hz
+  Respiration(uint8_t chan, Adafruit_ADS1015 *ads, unsigned long rate=50);   // default respiration samplerate is 50Hz
   virtual ~Respiration() {}
 
   /// Resets all values.

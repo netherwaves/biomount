@@ -31,14 +31,17 @@
 #include "Threshold.h"
 #include "Lop.h"
 
+#include <Adafruit_ADS1X15.h>
+
 #ifndef HEART_H_
 #define HEART_H_
 
 class Heart {
     
     // Analog pin the Heart sensor is connected to.
-    uint8_t _pin;
-    
+    uint8_t _chan;
+    Adafruit_ADS1015* _ads;
+
     unsigned long bpmChronoStart;
     
     MinMax heartMinMax;
@@ -77,7 +80,7 @@ class Heart {
     unsigned long prevSampleMicros;
     
 public:
-    Heart(uint8_t pin, unsigned long rate=200); // default samplerate is 200Hz
+    Heart(uint8_t chan, Adafruit_ADS1015 *ads, unsigned long rate=200);
     virtual ~Heart() {}
     
     void setAmplitudeSmoothing(float smoothing);

@@ -33,11 +33,11 @@
 float alpha_1 = 0.01;
 float alpha_2 = 0.005;
 
-SkinConductance::SkinConductance(uint8_t pin, unsigned long rate) :
-  _pin(pin)
+SkinConductance::SkinConductance(uint8_t chan, Adafruit_ADS1015 *ads, unsigned long rate) :
+  _chan(chan),
+  _ads(ads)
 {
   setSampleRate(rate);
-  reset();
 }
 
 void SkinConductance::reset() {
@@ -82,18 +82,20 @@ int SkinConductance::getRaw() const {
 }
 
 void SkinConductance::sample() {
-    // Read sensor value and invert it.
-    gsrSensorReading = 1023 - analogRead(_pin); //this is a dummy read to clear the adc.  This is needed at higher sampling frequencies.
-    gsrSensorReading = 1023 - analogRead(_pin);
-    // Smooth out the signals that you compare to one another and map between 0 and 1000
+  gsrSensorReading = (_ads->readADC_SingleEnded(_chan) / 1649.0) * 1023.0;
 
-    gsrSensorLop = alpha_1*gsrSensorReading + (1 - alpha_1)*gsrSensorLop;
-    gsrSensorLopassed = alpha_2*gsrSensorLop + (1 - alpha_2)*gsrSensorLopassed;
+  // // Read sensor value and invert it.
+  // gsrSensorReading = 1023 - analogRead(_pin); //this is a dummy read to clear the adc.  This is needed at higher sampling frequencies.
+  // gsrSensorReading = 1023 - analogRead(_pin);
+  // Smooth out the signals that you compare to one another and map between 0 and 1000
 
-    gsrSensorChange = ((gsrSensorLop - gsrSensorLopassed)/10)+0.2;
+  gsrSensorLop = alpha_1*gsrSensorReading + (1 - alpha_1)*gsrSensorLop;
+  gsrSensorLopassed = alpha_2*gsrSensorLop + (1 - alpha_2)*gsrSensorLopassed;
 
-    gsrSensorLopFiltered = map(gsrSensorLop, 0, 1023, 0, 1000)*0.001;
+  gsrSensorChange = ((gsrSensorLop - gsrSensorLopassed)/10)+0.2;
 
-    gsrSensorChange = constrain(gsrSensorChange, 0, 1);
+  gsrSensorLopFiltered = map(gsrSensorLop, 0, 1023, 0, 1000)*0.001;
+
+  gsrSensorChange = constrain(gsrSensorChange, 0, 1);
 
 }

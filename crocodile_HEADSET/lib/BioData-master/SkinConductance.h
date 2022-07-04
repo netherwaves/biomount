@@ -32,6 +32,8 @@
 #include "Lop.h"
 #include "Hip.h"
 
+#include <Adafruit_ADS1X15.h>
+
 
 #ifndef SKIN_CONDUCTANCE_H_
 #define SKIN_CONDUCTANCE_H_
@@ -40,7 +42,9 @@
 class SkinConductance {
 
   // Analog pin the SC sensor is connected to.
-  uint8_t _pin;
+  uint8_t _chan;
+  Adafruit_ADS1015* _ads;
+
   int gsrSensorReading;
 
   float gsrSensorFiltered;
@@ -59,7 +63,7 @@ class SkinConductance {
   unsigned long prevSampleMicros;
 
 public:
-  SkinConductance(uint8_t pin, unsigned long rate=50); // default SC samplerate is 50Hz
+  SkinConductance(uint8_t chan, Adafruit_ADS1015* ads, unsigned long rate=50); // default SC samplerate is 50Hz
   virtual ~SkinConductance() {}
 
   /// Resets all values.

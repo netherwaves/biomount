@@ -28,8 +28,9 @@
  */
 #include "Respiration.h"
 
-Respiration::Respiration(uint8_t pin, unsigned long rate) :
-  _pin(pin),
+Respiration::Respiration(uint8_t chan, Adafruit_ADS1015 *ads, unsigned long rate) :
+  _chan(chan),
+  _ads(ads),
 
 // look for center of min max signal - false triggers from noise are unlikely
 respThresh(0.5, 0.55),          // if signal does not fall below (low, high) bounds than signal is ignored
@@ -38,7 +39,7 @@ respSensorAmplitudeLop(0.001),  // original value 0.001
   respSensorBpmLop(0.001)       // original value 0.001
 {
   setSampleRate(rate);
-  reset();
+  //reset();
 }
 
 void Respiration::reset() {
@@ -96,9 +97,13 @@ int Respiration::getRaw() const {
 }
 
 void Respiration::sample() {
-  // Read analog value if needed.
-  respSensorReading = analogRead(_pin); //this is a dummy read to clear the adc.  This is needed at higher sampling frequencies.
-  respSensorReading = analogRead(_pin);
+  if (_ads == nullptr) return;
+
+  respSensorReading = 1.0 - (_ads->readADC_SingleEnded(_chan) / 1649.0);
+
+  // // Read analog value if needed.
+  // respSensorReading = analogRead(_pin); //this is a dummy read to clear the adc.  This is needed at higher sampling frequencies.
+  // respSensorReading = analogRead(_pin);
   
   respSensorFiltered = respMinMax.filter(respSensorReading);
   respSensorAmplitude = respMinMax.getMax() - respMinMax.getMin();

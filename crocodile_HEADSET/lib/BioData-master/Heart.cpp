@@ -27,8 +27,9 @@
  */
 #include "Heart.h"
 
-Heart::Heart(uint8_t pin, unsigned long rate) :
-_pin(pin),
+Heart::Heart(uint8_t chan, Adafruit_ADS1015 *ads, unsigned long rate) :
+_chan(chan),
+_ads(ads),
 heartThresh(0.25, 0.4),              // if signal does not fall below (low, high) bounds than signal is ignored
 heartSensorAmplitudeLop(0.001),
 heartSensorBpmLop(0.001),
@@ -37,7 +38,7 @@ heartSensorBpmLopValueMinMaxSmoothing(0.001),
 heartMinMaxSmoothing(0.1)
 {
     setSampleRate(rate);
-    reset();
+    //reset();
 }
 
 void Heart::setAmplitudeSmoothing(float smoothing)
@@ -123,9 +124,15 @@ int Heart::getRaw() const {
 }
 
 void Heart::sample() {
-    // Read analog value if needed.
-    heartSensorReading = analogRead(_pin);  //this is a dummy read to clear the adc.  This is needed at higher sampling frequencies.
-    heartSensorReading = analogRead(_pin);
+    if (_ads == nullptr) return;
+    
+    // (3.3V / 4.096V [GAIN_ONE]) * 4096 [12-BIT] = 3300
+    heartSensorReading = 1.0 - (_ads->readADC_SingleEnded(_chan) / 1649.0);
+
+
+    // // Read analog value if needed.
+    // heartSensorReading = analogRead(_pin);  //this is a dummy read to clear the adc.  This is needed at higher sampling frequencies.
+    // heartSensorReading = analogRead(_pin);
 
     heartSensorFiltered = heartMinMax.filter(heartSensorReading);
     heartSensorAmplitude = heartMinMax.getMax() - heartMinMax.getMin();
