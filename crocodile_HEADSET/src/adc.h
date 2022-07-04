@@ -1,16 +1,28 @@
 #pragma once
 
+
 #include <Wire.h>
 #include <SPI.h>
 #include <Adafruit_ADS1X15.h>
+
 #include <Heart.h>
 #include <Respiration.h>
 #include <SkinConductance.h>
+
 
 #define HEART_ADC_CHAN 0
 #define RESP_ADC_CHAN 1
 #define FOREHEAD_ADC_CHAN 2
 #define NECK_ADC_CHAN 3
+
+
+struct SensorPack {
+  float heart;
+  float resp;
+  float forehead;
+  float neck;
+};
+
 
 Adafruit_ADS1015* ads;
 
@@ -18,6 +30,7 @@ Heart* heart;
 Respiration* resp;
 SkinConductance* foreheadGSR;
 SkinConductance* neckGSR;
+
 
 void setup_adc() {
   ads = new Adafruit_ADS1015();
@@ -50,9 +63,15 @@ void setup_sensors() {
   neckGSR->reset();
 }
 
+
 void update_sensors() {
-    heart->update();
-    resp->update();
-    foreheadGSR->update();
-    neckGSR->update();
+  heart->update();
+  resp->update();
+  foreheadGSR->update();
+  neckGSR->update();
+}
+
+
+SensorPack get_values() {
+  return { 1.0, 0.5, 0.22, 0.87 };
 }

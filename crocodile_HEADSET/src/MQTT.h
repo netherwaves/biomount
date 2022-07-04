@@ -7,6 +7,8 @@
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+void floatToBytes(char bytes_temp[4], float float_var);
+
 void setup_wifi()
 {
     Serial.println();
@@ -41,16 +43,13 @@ void reconnect()
         Serial.print("Attempting MQTT connection...");
 
         // create random client ID
-        String clientId = "ESP32Client-";
+        String clientId = "ESP8266Client-";
         clientId += String(random(0xffff), HEX);
 
         // attempt to connect
         if (client.connect(clientId.c_str()))
         {
             Serial.println("connected");
-            // announcement
-            client.publish("outTopic", "hello world");
-            client.subscribe("inTopic");
         }
         else
         {
@@ -73,4 +72,25 @@ void loop_mqtt()
 
 void callback(char *topic, byte *payload, unsigned int length)
 {
+}
+
+void send_to_esp32(SensorPack* packet) {
+    if (!client.connected()) return;
+
+    // create payload array
+    byte* payload = (byte*)malloc(16);
+    // copy packet to payload
+    memcpy(payload,         &packet->heart,     4);
+    memcpy(payload + 4,     &packet->resp,      4);
+    memcpy(payload + 8,     &packet->forehead,  4);
+    memcpy(payload + 12,    &packet->neck,      4);
+
+    // set topic
+    const char* topic = "biomount/headset01";
+    Serial.print("publishing to ");
+    Serial.println(topic);
+    
+    // publish to MQTT
+    client.publish(topic, payload, 16);
+    free(payload);
 }
