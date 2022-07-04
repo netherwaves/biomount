@@ -83,6 +83,6 @@ void loop() {
   if (currentMillis - litMillis >= ledInterval) {   // if led interval has been surpassed turn it off
     digitalWrite(LED, LOW);
   }
-
+  
 }
 
