@@ -1,31 +1,33 @@
 #include <Arduino.h>
 
+#include "adc.h"
+#include "elcontrol.h"
 #include "MQTT.h"
-#include "globals.h"
+
+
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
 
-  // biosignal multiplexer
-  pinMode(PIN_A0, INPUT);
-  pinMode(DIN_A, OUTPUT);
-  pinMode(DIN_B, OUTPUT);
-  pinMode(DIN_C, OUTPUT);
+  // config EL wire
+  setup_el();
 
-  // EL wire PWM outputs
-  pinMode(EL_RESP, OUTPUT);
-  pinMode(EL_GSR1, OUTPUT);
-  pinMode(EL_GSR2, OUTPUT);
-  pinMode(EL_HRT, OUTPUT);
+  // config sensors (ADC)
+  setup_adc();
+  setup_sensors();    // IMPORTANT: set up ADC before sensors!
 
-
-  // Setup .
+  // setup wifi + mqtt
   setup_wifi();
-  setup_mqtt();
+  //setup_mqtt();
+
+  // testinge
+  set_el_duty(EL_HEART, 255);
+  set_el_duty(EL_RESP, 255);
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  loop_mqtt();
+  //loop_mqtt();
+  update_sensors();
 }

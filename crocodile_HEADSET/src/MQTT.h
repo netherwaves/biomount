@@ -1,3 +1,5 @@
+#pragma once
+
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include "conf.h"
@@ -29,7 +31,7 @@ void setup_wifi()
 void setup_mqtt()
 {
     client.setServer(MQTT_SERVER, MQTT_PORT);
-    client.setCallback(callback);
+    //client.setCallback(callback);
 }
 
 void reconnect()
