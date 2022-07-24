@@ -72,18 +72,19 @@ void callback(char *topic, byte *payload, unsigned int length)
 {
 }
 
-void send_to_esp32(SensorPack* packet) {
+void send_to_esp32(SensorPack &packet) {
     if (!client.connected()) return;
 
     // create payload array
     byte* payload = (byte*)malloc(16);
     // copy packet to payload
-    memcpy(payload,         &packet->heart,     4);
-    memcpy(payload + 4,     &packet->resp,      4);
-    memcpy(payload + 8,     &packet->forehead,  4);
-    memcpy(payload + 12,    &packet->neck,      4);
+    memcpy(payload,         &packet.heart,      4);
+    memcpy(payload + 4,     &packet.resp,       4);
+    memcpy(payload + 8,     &packet.forehead,   4);
+    memcpy(payload + 12,    &packet.neck,       4);
 
     // set topic
+    // TODO: dynamic topic assignment w/ mainboard ESP32
     const char* topic = "biomount/headset01";
     Serial.print("publishing to ");
     Serial.println(topic);

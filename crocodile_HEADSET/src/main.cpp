@@ -2,10 +2,11 @@
 #include <Ticker.h>
 
 #include "adc.h"
-#include "elcontrol.h"
+#include "lightctl.h"
 #include "MQTT.h"
 
 Ticker ticker;
+SensorPack packet;
 
 void send_data();
 
@@ -13,8 +14,8 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(57600);
 
-  // config EL wire
-  setup_el();
+  // config light controller
+  setup_light();
 
   // config sensors (ADC)
   setup_adc();
@@ -25,11 +26,7 @@ void setup() {
   setup_mqtt();
 
   // updated at around 60fps...
-  ticker.attach_ms(1000, send_data);
-
-  // testinge
-  //set_el_duty(EL_HEART, 255);
-  //set_el_duty(EL_RESP, 255);
+  ticker.attach_ms(15, send_data);
 }
 
 void loop() {
@@ -39,10 +36,10 @@ void loop() {
 }
 
 void send_data() {
-  SensorPack packet = get_values();
+  packet = get_values();
 
   //send to EL wire
-  update_el_wire(&packet);
+  update_light(packet);
   //send to ESP32
-  send_to_esp32(&packet);
+  send_to_esp32(packet);
 }

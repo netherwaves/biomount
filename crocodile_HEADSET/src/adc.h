@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <Wire.h>
 #include <SPI.h>
 #include <Adafruit_ADS1X15.h>
@@ -10,8 +9,8 @@
 #include <SkinConductance.h>
 
 
-#define HEART_ADC_CHAN 0
-#define RESP_ADC_CHAN 1
+#define RESP_ADC_CHAN 0
+#define HEART_ADC_CHAN 1
 #define FOREHEAD_ADC_CHAN 2
 #define NECK_ADC_CHAN 3
 
@@ -73,5 +72,10 @@ void update_sensors() {
 
 
 SensorPack get_values() {
-  return { 1.0, 0.5, 0.22, 0.87 };
+  return {
+    heart->getNormalized(),   // heart
+    resp->getNormalized(),    // respiration
+    foreheadGSR->getSCR(),    // forehead
+    neckGSR->getSCR()         // neck
+  };
 }
